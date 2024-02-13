@@ -9,7 +9,7 @@ public class PersistentContextFactory {
 
   public static IContext build(String serverUrl) {
     if (serverUrl.contains("nats")) {
-      return new PersistentNatsContext();
+      return new PersistentNatsContext(serverUrl);
     }
     throw new CsmRuntimeException("Unsupported context type");
   }

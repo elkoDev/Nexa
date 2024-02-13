@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class CelExpressionEvaluatorTest {
+
   public static List<IContext> extent = new ArrayList<>();
   public static IExpressionEvaluator evaluator = new CelExpressionEvaluator();
 
@@ -34,35 +35,35 @@ class CelExpressionEvaluatorTest {
   }
 
   @Test
-  void testIntegerResolving(){
+  void testIntegerResolving() {
     Object result = evaluator.evaluate("some_integer", extent);
     assertInstanceOf(Long.class, result);
     assertEquals(0L, result);
   }
 
   @Test
-  void testFloatResolving(){
+  void testFloatResolving() {
     Object result = evaluator.evaluate("some_float", extent);
     assertInstanceOf(Double.class, result);
     assertEquals(2.35, result);
   }
 
   @Test
-  void testBooleanResolving(){
+  void testBooleanResolving() {
     Object result = evaluator.evaluate("some_boolean", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(true, result);
   }
 
   @Test
-  void testStringResolving(){
+  void testStringResolving() {
     Object result = evaluator.evaluate("some_string", extent);
     assertInstanceOf(String.class, result);
     assertEquals("hello", result);
   }
 
   @Test
-  void testListResolving(){
+  void testListResolving() {
     Object result = evaluator.evaluate("some_list", extent);
     assertInstanceOf(List.class, result);
     List<Integer> expected = List.of(1, 2, 3);
@@ -75,7 +76,7 @@ class CelExpressionEvaluatorTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  void testObjectResolving(){
+  void testObjectResolving() {
     Object result = evaluator.evaluate("some_object", extent);
     assertInstanceOf(Map.class, result);
     ((Map<String, Object>) result).forEach((key, value) -> {
@@ -90,7 +91,7 @@ class CelExpressionEvaluatorTest {
   }
 
   @Test
-  void testByteArrayResolving(){
+  void testByteArrayResolving() {
     Object result = evaluator.evaluate("some_byte_array", extent);
     var expected = new byte[]{1, 2, 3, 4, 5};
     assertInstanceOf(byte[].class, result);
@@ -101,106 +102,107 @@ class CelExpressionEvaluatorTest {
   }
 
   @Test
-  void testFalseIntegerExpression(){
+  void testFalseIntegerExpression() {
     Object result = evaluator.evaluate("some_integer == 5", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(false, result);
   }
 
   @Test
-  void testTrueIntegerExpression(){
+  void testTrueIntegerExpression() {
     Object result = evaluator.evaluate("some_integer == 0", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(true, result);
   }
 
   @Test
-  void testFalseFloatExpression(){
+  void testFalseFloatExpression() {
     Object result = evaluator.evaluate("some_float == 5.0", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(false, result);
   }
 
   @Test
-  void testTrueFloatExpression(){
+  void testTrueFloatExpression() {
     Object result = evaluator.evaluate("some_float == 2.35", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(true, result);
   }
 
   @Test
-  void testFalseBooleanExpression(){
+  void testFalseBooleanExpression() {
     Object result = evaluator.evaluate("some_boolean == false", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(false, result);
   }
 
   @Test
-  void testTrueBooleanExpression(){
+  void testTrueBooleanExpression() {
     Object result = evaluator.evaluate("some_boolean == true", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(true, result);
   }
 
   @Test
-  void testFalseStringExpression(){
+  void testFalseStringExpression() {
     Object result = evaluator.evaluate("some_string == \"world\"", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(false, result);
   }
 
   @Test
-  void testTrueStringExpression(){
+  void testTrueStringExpression() {
     Object result = evaluator.evaluate("some_string == \"hello\"", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(true, result);
   }
 
   @Test
-  void testFalseListExpression(){
+  void testFalseListExpression() {
     Object result = evaluator.evaluate("some_list == [1, 2, 3, 4]", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(false, result);
   }
 
   @Test
-  void testTrueListExpression(){
+  void testTrueListExpression() {
     Object result = evaluator.evaluate("some_list == [1, 2, 3]", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(true, result);
   }
 
   @Test
-  void testFalseObjectExpression(){
+  void testFalseObjectExpression() {
     Object result = evaluator.evaluate("some_object.some_value.a == 5", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(false, result);
   }
 
   @Test
-  void testTrueObjectExpression(){
+  void testTrueObjectExpression() {
     Object result = evaluator.evaluate("some_object.some_value.a == 7", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(true, result);
   }
 
   @Test
-  void testFalseListAllExpression(){
+  void testFalseListAllExpression() {
     Object result = evaluator.evaluate("some_list.all(i, i<3)", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(false, result);
   }
 
   @Test
-  void testTrueListAllExpression(){
+  void testTrueListAllExpression() {
     Object result = evaluator.evaluate("some_list.all(i, i<7)", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(true, result);
   }
 
   @Test
-  void testMixedExpression(){
-    Object result = evaluator.evaluate("some_list.all(i, i<7) && some_integer == 0 && some_object.some_value.a == 7", extent);
+  void testMixedExpression() {
+    Object result = evaluator.evaluate(
+        "some_list.all(i, i<7) && some_integer == 0 && some_object.some_value.a == 7", extent);
     assertInstanceOf(Boolean.class, result);
     assertEquals(true, result);
   }

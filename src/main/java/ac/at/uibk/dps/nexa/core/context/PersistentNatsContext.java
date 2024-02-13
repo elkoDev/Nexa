@@ -1,8 +1,26 @@
 package ac.at.uibk.dps.nexa.core.context;
 
 import ac.at.uibk.dps.nexa.core.context.datatype.ContextData;
+import ac.at.uibk.dps.nexa.core.error.CsmRuntimeException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import io.nats.client.Connection;
+import io.nats.client.Nats;
 
 public class PersistentNatsContext implements IContext {
+
+  private static final String BUCKET_NAME = "CSM_PERSISTENT_CONTEXT";
+  private final String serverUrl;
+  private final ObjectMapper mapper;
+
+  public PersistentNatsContext(String serverUrl) {
+    this.serverUrl = serverUrl;
+    mapper = new ObjectMapper();
+    var module = new SimpleModule();
+    module.addSerializer(ContextData.class, new ContextDataSerializer());
+    module.addDeserializer(ContextData.class, new ContextDataDeserializer());
+    mapper.registerModule(module);
+  }
 
   /**
    * Returns the value of the context variable with the given name.
@@ -12,7 +30,16 @@ public class PersistentNatsContext implements IContext {
    */
   @Override
   public ContextData get(String variableName) {
-    return null;
+    try (Connection nc = Nats.connect(serverUrl)) {
+      var kv = nc.keyValue(BUCKET_NAME);
+      var value = kv.get(variableName);
+      if (value == null) {
+        return null;
+      }
+      return mapper.readValue(value.getValue(), ContextData.class);
+    } catch (Exception e) {
+      return null;
+    }
   }
 
   /**
@@ -24,7 +51,14 @@ public class PersistentNatsContext implements IContext {
    */
   @Override
   public boolean create(String variableName, ContextData value) {
-    return false;
+    try (Connection nc = Nats.connect(serverUrl)) {
+      var kv = nc.keyValue(BUCKET_NAME);
+      var serializedValue = mapper.writeValueAsBytes(value);
+      kv.create(variableName, serializedValue);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
   }
 
   /**
@@ -36,7 +70,14 @@ public class PersistentNatsContext implements IContext {
    */
   @Override
   public boolean assign(String variableName, ContextData value) {
-    return false;
+    try (Connection nc = Nats.connect(serverUrl)) {
+      var kv = nc.keyValue(BUCKET_NAME);
+      var serializedValue = mapper.writeValueAsBytes(value);
+      kv.put(variableName, serializedValue);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
   }
 
   /**
@@ -47,7 +88,7 @@ public class PersistentNatsContext implements IContext {
    */
   @Override
   public boolean lock(String variableName) {
-    return false;
+    throw new CsmRuntimeException("Locking is not supported in the PersistentNatsContext.");
   }
 
   /**
@@ -58,7 +99,7 @@ public class PersistentNatsContext implements IContext {
    */
   @Override
   public boolean unlock(String variableName) {
-    return false;
+    throw new CsmRuntimeException("Unlocking is not supported in the PersistentNatsContext.");
   }
 
   /**
@@ -69,6 +110,12 @@ public class PersistentNatsContext implements IContext {
    */
   @Override
   public boolean delete(String variableName) {
-    return false;
+    try (Connection nc = Nats.connect(serverUrl)) {
+      var kv = nc.keyValue(BUCKET_NAME);
+      kv.delete(variableName);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
   }
 }

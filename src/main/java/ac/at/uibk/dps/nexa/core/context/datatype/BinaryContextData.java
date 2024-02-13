@@ -1,14 +1,14 @@
 package ac.at.uibk.dps.nexa.core.context.datatype;
 
-public class ByteArrayContextData extends ContextData {
+public class BinaryContextData extends ContextData {
 
   private final byte[] data;
 
-  private ByteArrayContextData() {
+  private BinaryContextData() {
     data = null;
   }
 
-  public ByteArrayContextData(byte[] data) {
+  public BinaryContextData(byte[] data) {
     this.data = data;
   }
 
@@ -19,7 +19,7 @@ public class ByteArrayContextData extends ContextData {
 
   @Override
   public ContextDataType type() {
-    return ContextDataType.BYTE_ARRAY;
+    return ContextDataType.BINARY;
   }
 
 }

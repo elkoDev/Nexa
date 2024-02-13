@@ -5,9 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import ac.at.uibk.dps.nexa.core.context.IContext;
 import ac.at.uibk.dps.nexa.core.context.LocalContext;
-import ac.at.uibk.dps.nexa.core.context.datatype.ByteArrayContextData;
-import ac.at.uibk.dps.nexa.core.context.datatype.StringContextData;
+import ac.at.uibk.dps.nexa.core.context.datatype.BinaryContextData;
+import ac.at.uibk.dps.nexa.core.context.datatype.JsonContextData;
 import ac.at.uibk.dps.nexa.core.expression.CelExpressionEvaluator;
+import ac.at.uibk.dps.nexa.core.expression.IExpressionEvaluator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,18 +17,18 @@ import org.junit.jupiter.api.Test;
 
 class CelExpressionEvaluatorTest {
   public static List<IContext> extent = new ArrayList<>();
-  public static CelExpressionEvaluator evaluator = new CelExpressionEvaluator();
+  public static IExpressionEvaluator evaluator = new CelExpressionEvaluator();
 
   @BeforeAll
   static void setUp() {
     LocalContext localContext = new LocalContext();
-    localContext.create("some_integer", new StringContextData("0"));
-    localContext.create("some_float", new StringContextData("2.35"));
-    localContext.create("some_boolean", new StringContextData("true"));
-    localContext.create("some_string", new StringContextData("\"hello\""));
-    localContext.create("some_list", new StringContextData("[1, 2, 3]"));
-    localContext.create("some_object", new StringContextData("{\"some_value\": {\"a\": 7}}"));
-    localContext.create("some_byte_array", new ByteArrayContextData(new byte[]{1, 2, 3, 4, 5}));
+    localContext.create("some_integer", new JsonContextData("0"));
+    localContext.create("some_float", new JsonContextData("2.35"));
+    localContext.create("some_boolean", new JsonContextData("true"));
+    localContext.create("some_string", new JsonContextData("\"hello\""));
+    localContext.create("some_list", new JsonContextData("[1, 2, 3]"));
+    localContext.create("some_object", new JsonContextData("{\"some_value\": {\"a\": 7}}"));
+    localContext.create("some_byte_array", new BinaryContextData(new byte[]{1, 2, 3, 4, 5}));
 
     extent.add(localContext);
   }
@@ -72,6 +73,7 @@ class CelExpressionEvaluatorTest {
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   void testObjectResolving(){
     Object result = evaluator.evaluate("some_object", extent);

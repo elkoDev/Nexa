@@ -1,14 +1,14 @@
 package ac.at.uibk.dps.nexa.core.context.datatype;
 
-public class StringContextData extends ContextData {
+public class JsonContextData extends ContextData {
 
   private final String data;
 
-  private StringContextData() {
+  private JsonContextData() {
     data = null;
   }
 
-  public StringContextData(String data) {
+  public JsonContextData(String data) {
     this.data = data;
   }
 
@@ -19,7 +19,7 @@ public class StringContextData extends ContextData {
 
   @Override
   public ContextDataType type() {
-    return ContextDataType.STRING;
+    return ContextDataType.JSON;
   }
 
 }

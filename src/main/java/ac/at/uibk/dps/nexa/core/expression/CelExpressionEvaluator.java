@@ -115,9 +115,9 @@ public class CelExpressionEvaluator implements IExpressionEvaluator {
           continue;
         }
         ContextDataType type = value.type();
-        if (Objects.requireNonNull(type) == ContextDataType.STRING) {
+        if (Objects.requireNonNull(type) == ContextDataType.JSON) {
           mapping.put(identifier, getObjectFromJson((String) value.value()));
-        } else if (type == ContextDataType.BYTE_ARRAY) {
+        } else if (type == ContextDataType.BINARY) {
           mapping.put(identifier, value.value());
         }
       }

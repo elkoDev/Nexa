@@ -14,6 +14,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("dev.cel:cel:0.3.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
+    implementation("io.nats:jnats:2.17.3")
 }
 
 tasks.test {

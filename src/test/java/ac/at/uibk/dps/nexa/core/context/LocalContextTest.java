@@ -2,6 +2,7 @@ package ac.at.uibk.dps.nexa.core.context;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import ac.at.uibk.dps.nexa.core.context.datatype.BinaryContextData;
@@ -41,7 +42,7 @@ class LocalContextTest {
   @Test
   void testGetNotExisting() {
     var result = context.get("some_variable");
-    assertEquals(null, result);
+    assertNull(result);
   }
 
   @Test
@@ -68,6 +69,6 @@ class LocalContextTest {
     context.create("some_variable", new JsonContextData("{\"some_value\": {\"a\": 7}}"));
     context.delete("some_variable");
     var result = context.get("some_variable");
-    assertEquals(null, result);
+    assertNull(result);
   }
 }

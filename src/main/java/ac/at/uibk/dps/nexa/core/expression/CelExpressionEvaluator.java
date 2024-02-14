@@ -102,6 +102,13 @@ public class CelExpressionEvaluator implements IExpressionEvaluator {
     return declarations;
   }
 
+  /**
+   * Get the mapping of the given identifiers to their values in the given extent.
+   *
+   * @param identifiers the list of identifiers to get the mapping for.
+   * @param extent      the extent to get the values from.
+   * @return the mapping of the given identifiers to their values in the given extent.
+   */
   private Map<String, Object> getMapping(List<String> identifiers, List<IContext> extent) {
     Map<String, Object> mapping = new HashMap<>();
 

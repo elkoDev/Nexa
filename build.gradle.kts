@@ -13,7 +13,8 @@ repositories {
 }
 
 dependencies {
-    jacocoAggregation(project(":core"))
+    jacocoAggregation(project(":csm-core"))
+    jacocoAggregation(project(":csm-ui"))
 }
 
 reporting {

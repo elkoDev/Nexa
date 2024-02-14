@@ -10,9 +10,9 @@ import ac.at.uibk.dps.nexa.core.error.CsmRuntimeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class PersistentNatsContextTest {
+class LocalContextTest {
 
-  private final IContext context = new PersistentNatsContext("nats://127.0.0.1:4222");
+  private final IContext context = new LocalContext();
 
   @BeforeEach
   void setUp() {

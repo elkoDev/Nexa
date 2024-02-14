@@ -5,15 +5,18 @@ plugins {
 
 group = "at.uibk.dps.nexa"
 version = "1.0-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation(platform("org.junit:junit-bom:5.10.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+
     implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
+
     implementation("io.nats:jnats:2.17.3")
     implementation("dev.cel:cel:0.3.0")
 }

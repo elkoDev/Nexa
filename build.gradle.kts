@@ -3,7 +3,7 @@ import java.nio.file.StandardCopyOption
 
 plugins {
     base
-    id("org.sonarqube") version "4.2.0.3129"
+    id("org.sonarqube") version "4.4.1.3373"
     id("jacoco-report-aggregation")
     id("jacoco")
 }

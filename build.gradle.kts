@@ -1,22 +1,50 @@
-plugins {
-    id("java")
-}
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
-group = "ac.at.uibk.dps.nexa"
-version = "1.0-SNAPSHOT"
+plugins {
+    base
+    id("org.sonarqube") version "4.2.0.3129"
+    id("jacoco-report-aggregation")
+    id("jacoco")
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    implementation("dev.cel:cel:0.3.0")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
-    implementation("io.nats:jnats:2.17.3")
+    jacocoAggregation(project(":core"))
 }
 
-tasks.test {
-    useJUnitPlatform()
+reporting {
+    reports {
+        val jacocoTestReport by creating(JacocoCoverageReport::class) {
+            testType.set(TestSuiteType.UNIT_TEST)
+        }
+    }
+}
+
+tasks.named("check") {
+    dependsOn(tasks.named<JacocoReport>("jacocoTestReport"))
+}
+
+tasks.withType<JacocoReport> {
+    doLast {
+        val xmlReportFile = reports.xml.outputLocation
+
+        val targetDir = "${rootProject.buildDir}/../target/site/jacoco"
+        val targetFile = "$targetDir/jacoco.xml"
+
+        project.file(targetDir).mkdirs()
+        Files.copy(xmlReportFile.asFile.get().toPath(), project.file(targetFile).toPath(), StandardCopyOption.REPLACE_EXISTING)
+    }
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "virtuoso_nexa")
+        property("sonar.organization", "virtuoso")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${rootProject.buildDir}\\reports\\jacoco\\jacocoTestReport\\jacocoTestReport.xml")
+    }
 }

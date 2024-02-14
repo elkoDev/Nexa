@@ -8,9 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import ac.at.uibk.dps.nexa.core.context.datatype.BinaryContextData;
 import ac.at.uibk.dps.nexa.core.context.datatype.JsonContextData;
 import ac.at.uibk.dps.nexa.core.error.CsmRuntimeException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
+@DisabledIfEnvironmentVariable(named = "CI", matches = "true", disabledReason = "Disabled on CI as it requires a running NATS server.")
 class PersistentNatsContextTest {
 
   private final IContext context = new PersistentNatsContext("nats://127.0.0.1:4222");
@@ -26,7 +29,7 @@ class PersistentNatsContextTest {
     context.create("some_variable", new JsonContextData("{\"some_value\": {\"a\": 7}}"));
     var result = context.get("some_variable");
     assertInstanceOf(JsonContextData.class, result);
-    assertEquals("{\"some_value\": {\"a\": 7}}", result.value());
+    Assertions.assertEquals("{\"some_value\": {\"a\": 7}}", result.value());
   }
 
   @Test
@@ -51,7 +54,7 @@ class PersistentNatsContextTest {
     context.assign("some_variable", new JsonContextData("{\"some_value\": {\"a\": 8}}"));
     var result = context.get("some_variable");
     assertInstanceOf(JsonContextData.class, result);
-    assertEquals("{\"some_value\": {\"a\": 8}}", result.value());
+    Assertions.assertEquals("{\"some_value\": {\"a\": 8}}", result.value());
   }
 
   @Test
